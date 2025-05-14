@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Entity(name="maclenak")
 @Data
@@ -15,6 +16,11 @@ public class Maclenak {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @OneToMany(mappedBy = "maclenak", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Author> authors;
+    //я просто не придумал с чем ещё можно сделать связь
+
     private String test1;
     private String test2;
     private String test3;
