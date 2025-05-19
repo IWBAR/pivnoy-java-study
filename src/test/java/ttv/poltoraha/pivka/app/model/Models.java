@@ -6,7 +6,6 @@ import ttv.poltoraha.pivka.entity.Book;
 import ttv.poltoraha.pivka.entity.Review;
 
 import java.util.Collections;
-import java.util.List;
 
 import static ttv.poltoraha.pivka.app.util.TestConst.REVIEW_TEXT;
 import static ttv.poltoraha.pivka.app.util.TestConst.USERNAME;

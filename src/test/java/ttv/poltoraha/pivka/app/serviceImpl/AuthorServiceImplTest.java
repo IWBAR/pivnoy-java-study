@@ -12,7 +12,8 @@ import ttv.poltoraha.pivka.dao.request.AuthorDto;
 import ttv.poltoraha.pivka.entity.Author;
 import ttv.poltoraha.pivka.repository.AuthorRepository;
 import ttv.poltoraha.pivka.serviceImpl.AuthorServiceImpl;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ttv.poltoraha.pivka.app.model.Models.getAuthorDto;
 
 @SpringBootTest
