@@ -28,22 +28,23 @@ public class AuthorController {
 
     @PostMapping("/create")
     public void createAuthor(@RequestBody AuthorDto author) {
-        logger.info("до создания автора: {}", author);
+        String name = author.getFullName();
+        logger.info("создаем автора: {}", name);
         authorService.create(author);
-        logger.info("после создания автора: {}", author);
+        logger.info("создали автора: {}", name);
     }
 
     @PostMapping("/delete")
     public void deleteAuthorById(@RequestParam Integer id) {
-        logger.info("до удаления автора: {}", authorRepository.findAll().size());
+        logger.info("удаляем автора с ID: {}", id);
         authorService.delete(id);
-        logger.info("после удаления автора: {}", authorRepository.findAll().size());
+        logger.info("удалили автора с ID: {}", id);
     }
 
     @PostMapping("/add/books")
     public void addBooksToAuthor(@RequestParam Integer id, @RequestBody List<Book> books) {
-        logger.info("до добавления книг: {}", authorRepository.findById(id).get().getBooks());
+        logger.info("добавляем книги автору с ID: {}", id);
         authorService.addBooks(id, books);
-        logger.info("после добавления книг: {}", authorRepository.findById(id).get().getBooks());
+        logger.info("добавили книги автору с ID: {}", id);
     }
 }
