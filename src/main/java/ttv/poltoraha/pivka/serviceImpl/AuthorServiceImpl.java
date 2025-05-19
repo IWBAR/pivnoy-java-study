@@ -29,36 +29,37 @@ public class AuthorServiceImpl implements AuthorService {
     // todo как будто надо насрать всякими мапперами
     @Override
     public void create(AuthorDto author) {
-        logger.info("до добавления автора: {}", authorRepository.findAll().size());
+        String name = author.getFullName();
+        logger.info("добавляем автора: {}", name);
         Author mappedauthor = MappingUtil.AuthorFromDto(author);
         authorRepository.save(mappedauthor);
-        logger.info("после добавления автора: {}", authorRepository.findAll().size());
+        logger.info("добавили автора: {}", name);
     }
 
     @Override
     public void delete(Integer id) {
-        if(!authorRepository.existsById(id)){
-            throw new EntityNotFoundException("Author with id = " + id +" not found");
+        if (!authorRepository.existsById(id)) {
+            throw new EntityNotFoundException("Author with id = " + id + " not found");
         }
-        logger.info("до удаления автора: {}", authorRepository.findAll().size());
+        logger.info("удаляем автора с ID: {}", id);
         authorRepository.deleteById(id);
-        logger.info("после удаления автора: {}", authorRepository.findAll().size());
+        logger.info("удалили автора с ID: {}", id);
     }
 
     @Override
     public void addBooks(Integer id, List<Book> books) {
         val author = getOrThrow(id);
-        logger.info("до добавления книг: {}", authorRepository.findById(id).get().getBooks());
+        logger.info("добавляем книги автору с ID: {}", id);
         author.getBooks().addAll(books);
-        logger.info("после добавления книг: {}", authorRepository.findById(id).get().getBooks());
+        logger.info("добавили книги автору с ID: {}", id);
     }
 
     @Override
     public void addBook(Integer id, Book book) {
         val author = getOrThrow(id);
-        logger.info("до добавления книги: {}", authorRepository.findById(id).get().getBooks());
+        logger.info("добавляем книгу автору с ID: {}", id);
         author.getBooks().add(book);
-        logger.info("после добавления книги: {}", authorRepository.findById(id).get().getBooks());
+        logger.info("добавили книгу автору с ID: {}", id);
     }
 
     @Override
@@ -77,11 +78,11 @@ public class AuthorServiceImpl implements AuthorService {
         logger.info("нашли автора по айди: {} ", id);
         val author = optionalAuthor.orElse(null);
 
-        logger.info("проверка автора: {} на null", author);
+        logger.info("проверка автора с ID: {} на null", id);
         if (author == null) {
-            throw new RuntimeException("Author with id = " + id + " not found");
+            throw new EntityNotFoundException("Author with id = " + id + " not found");
         }
-        logger.info("проверка автора: {} прошла успешно", author);
+        logger.info("проверка автора с ID: {} прошла успешно", id);
         return author;
     }
 }
