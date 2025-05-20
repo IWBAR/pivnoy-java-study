@@ -5,7 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ttv.poltoraha.pivka.entity.*;
+import ttv.poltoraha.pivka.entity.Author;
+import ttv.poltoraha.pivka.entity.Book;
+import ttv.poltoraha.pivka.entity.Quote;
+import ttv.poltoraha.pivka.entity.Reading;
+import ttv.poltoraha.pivka.repository.AuthorRepository;
 import ttv.poltoraha.pivka.repository.BookRepository;
 import ttv.poltoraha.pivka.repository.ReaderRepository;
 import ttv.poltoraha.pivka.repository.ReadingRepository;
@@ -28,6 +32,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final AuthorService authorService;
     private final BookRepository bookRepository;
     private final ReadingRepository readingRepository;
+    private final AuthorRepository authorRepository;
 
     /**
      * Чё делает метод и чё он должен делать:
@@ -85,7 +90,62 @@ public class RecommendationServiceImpl implements RecommendationService {
      */
     @Override
     public List<Book> recommendBook(String username) {
-        return null;
+        val reader = MyUtility.findEntityById(readerRepository.findByUsername(username), "reader", username);
+
+        val firstPopularTag = reader.getReadings().stream()
+                .map(Reading::getBook)
+                .flatMap(book -> book.getTags().stream())
+                .collect(Collectors.groupingBy(tag -> tag, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(2)
+                .map(Map.Entry::getKey)
+                .toList()
+                .getFirst();
+
+        val secondPopularTag = reader.getReadings().stream()
+                .map(Reading::getBook)
+                .flatMap(book -> book.getTags().stream())
+                .collect(Collectors.groupingBy(tag -> tag, Collectors.counting()))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(2)
+                .map(Map.Entry::getKey)
+                .toList()
+                .getLast();
+
+        val allbooks = authorRepository.findAll().stream()
+                .map(Author::getBooks)
+                .flatMap(List::stream)
+                .toList();
+
+        val booksByFirstTag = allbooks.stream()
+                .filter(book -> book.getTags().contains(firstPopularTag))
+                .toList()
+                .stream()
+                .sorted(Comparator.comparingDouble(Book::getRating).reversed())
+                .limit(3)
+                .toList();
+
+        val booksBySecondTag = allbooks.stream()
+                .filter(book -> book.getTags().contains(secondPopularTag))
+                .toList()
+                .stream()
+                .sorted(Comparator.comparingDouble(Book::getRating).reversed())
+                .limit(2)
+                .toList();
+
+        val finishedListOfBooks = Stream.concat(booksByFirstTag.stream(),booksBySecondTag.stream())
+                .toList();
+
+        if(finishedListOfBooks.isEmpty()){
+        //todo потом тут сделаю всякие контроллерадвайсы и тд
+            return null;
+        }
+
+        return finishedListOfBooks;
     }
 
     /**
