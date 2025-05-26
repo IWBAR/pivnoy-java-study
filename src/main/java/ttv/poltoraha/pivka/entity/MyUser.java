@@ -16,7 +16,7 @@ import lombok.ToString;
 
 import java.util.Set;
 
-@Entity(name="app_user")
+@Entity(name = "app_user")
 @Data
 @ToString
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -33,4 +33,5 @@ public class MyUser {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+    private boolean passwordChangeRequired;
 }
