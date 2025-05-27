@@ -102,7 +102,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .limit(2)
                 .map(Map.Entry::getKey)
                 .toList()
-                .getFirst();
+                .get(0);
 
         val secondPopularTag = reader.getReadings().stream()
                 .map(Reading::getBook)
@@ -114,14 +114,14 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .limit(2)
                 .map(Map.Entry::getKey)
                 .toList()
-                .getLast();
+                .get(1);
 
-        val allbooks = authorRepository.findAll().stream()
+        val allBooks = authorRepository.findAll().stream()
                 .map(Author::getBooks)
                 .flatMap(List::stream)
                 .toList();
 
-        val booksByFirstTag = allbooks.stream()
+        val booksByFirstTag = allBooks.stream()
                 .filter(book -> book.getTags().contains(firstPopularTag))
                 .toList()
                 .stream()
@@ -129,7 +129,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .limit(3)
                 .toList();
 
-        val booksBySecondTag = allbooks.stream()
+        val booksBySecondTag = allBooks.stream()
                 .filter(book -> book.getTags().contains(secondPopularTag))
                 .toList()
                 .stream()

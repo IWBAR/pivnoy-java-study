@@ -2,6 +2,7 @@ package ttv.poltoraha.pivka.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ttv.poltoraha.pivka.entity.Author;
@@ -20,17 +21,17 @@ public class RecommendationController {
     private final RecommendationService recommendationService;
 
     @PostMapping("/recommendAuthor")
-    public List<Author> getRecommendAuthor(Reader reader){
+    public List<Author> getRecommendAuthor(@RequestBody Reader reader){
         return recommendationService.recommendAuthor(reader.getUsername());
     }
 
     @PostMapping("/recommendedBooks")
-    public List<Book> getRecommendBooks(Reader reader){
+    public List<Book> getRecommendBooks(@RequestBody Reader reader){
         return recommendationService.recommendBook(reader.getUsername());
     }
 
-    @PostMapping("/recommendedBooks")
-    public List<Quote> getRecommendQuoteByBook(Book book){
+    @PostMapping("/recommendedQuote")
+    public List<Quote> getRecommendQuoteByBook(@RequestBody Book book){
         return recommendationService.recommendQuoteByBook(book.getId());
     }
 }
