@@ -51,6 +51,8 @@ public class KafkaConfig {
         configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "your-group-id"); // Укажите вашу группу
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        configProps.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 15);
+        configProps.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 1000);
         return new DefaultKafkaConsumerFactory<>(configProps);
     }
 
@@ -58,6 +60,9 @@ public class KafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        factory.getContainerProperties().setIdleBetweenPolls(0);
+        factory.setConcurrency(1);
+        factory.getContainerProperties().setPollTimeout(1000);
         return factory;
     }
 }

@@ -87,6 +87,11 @@
 			<artifactId>micrometer-core</artifactId>
 			<version>1.14.6</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>33.4.8-jre</version>
+		</dependency>
 <!--		Зависимости для логгирования-->
     </dependencies>
 

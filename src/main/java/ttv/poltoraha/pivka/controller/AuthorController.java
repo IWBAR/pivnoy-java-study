@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ttv.poltoraha.pivka.dao.request.AuthorDto;
 import ttv.poltoraha.pivka.entity.Book;
 import ttv.poltoraha.pivka.metrics.CustomMetrics;
+import ttv.poltoraha.pivka.repository.AuthorRepository;
 import ttv.poltoraha.pivka.service.AuthorService;
 
 import java.util.List;
@@ -24,11 +27,12 @@ import java.util.List;
 public class AuthorController {
 
     private final AuthorService authorService;
+    private final AuthorRepository authorRepository;
     private final Logger logger = LoggerFactory.getLogger(AuthorController.class);
     private final CustomMetrics metrics;
 
     @PostMapping("/create")
-    public void createAuthor(@RequestBody AuthorDto author) {
+    public ResponseEntity<Void> createAuthor(@RequestBody AuthorDto author) {
         metrics.recordCounter();
         String name = author.getFullName();
         logger.info("создаем автора: {}", name);
@@ -38,10 +42,11 @@ public class AuthorController {
         timer.stop();
         metrics.recordTimer(timer.getNanoTime());
         logger.info("создали автора: {}", name);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/delete")
-    public void deleteAuthorById(@RequestParam Integer id) {
+    public ResponseEntity<Void> deleteAuthorById(@RequestParam Integer id) {
         metrics.recordCounter();
         logger.info("удаляем автора с ID: {}", id);
         StopWatch timer = new StopWatch();
@@ -50,10 +55,11 @@ public class AuthorController {
         timer.stop();
         metrics.recordTimer(timer.getNanoTime());
         logger.info("удалили автора с ID: {}", id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/add/books")
-    public void addBooksToAuthor(@RequestParam Integer id, @RequestBody List<Book> books) {
+    public ResponseEntity<Void> addBooksToAuthor(@RequestParam Integer id, @RequestBody List<Book> books) {
         metrics.recordCounter();
         logger.info("добавляем книги автору с ID: {}", id);
         StopWatch timer = new StopWatch();
@@ -62,5 +68,6 @@ public class AuthorController {
         timer.stop();
         metrics.recordTimer(timer.getNanoTime());
         logger.info("добавили книги автору с ID: {}", id);
+        return ResponseEntity.ok().build();
     }
 }
