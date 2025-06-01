@@ -1,5 +1,6 @@
 package ttv.poltoraha.pivka.consumer;
 
+import com.google.common.util.concurrent.RateLimiter;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -8,8 +9,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaConsumer {
 
+    private final RateLimiter rateLimiter = RateLimiter.create(1000.0);
+
     @KafkaListener(topics = "your-topic", groupId = "my-group")
     public void listen(String message) {
-        System.out.println("Received message: " + message);
+        rateLimiter.acquire();
+        saveToDatabase(message);
+    }
+
+    private void saveToDatabase(String message) {
+        try {
+            Thread.sleep(1000);
+            System.out.println("Saved to DB: " + message + " at " + System.currentTimeMillis());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
