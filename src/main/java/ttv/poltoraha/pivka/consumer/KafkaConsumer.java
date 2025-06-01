@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaConsumer {
 
-    private final RateLimiter rateLimiter = RateLimiter.create(15.0);
+    private final RateLimiter rateLimiter = RateLimiter.create(1000.0);
 
     @KafkaListener(topics = "your-topic", groupId = "my-group")
     public void listen(String message) {
