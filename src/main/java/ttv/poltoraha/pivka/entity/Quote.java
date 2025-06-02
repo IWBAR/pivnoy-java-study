@@ -1,12 +1,10 @@
 package ttv.poltoraha.pivka.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name="quote")
 @Data
@@ -21,4 +19,7 @@ public class Quote {
     @JoinColumn(name = "book_id")
     private Book book;
     private String text;
+    private Double rating;
+    @OneToMany(mappedBy = "quote", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuoteGrade> grades = new ArrayList<>();
 }

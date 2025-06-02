@@ -9,10 +9,7 @@ import ttv.poltoraha.pivka.entity.Author;
 import ttv.poltoraha.pivka.entity.Book;
 import ttv.poltoraha.pivka.entity.Quote;
 import ttv.poltoraha.pivka.entity.Reading;
-import ttv.poltoraha.pivka.repository.AuthorRepository;
-import ttv.poltoraha.pivka.repository.BookRepository;
-import ttv.poltoraha.pivka.repository.ReaderRepository;
-import ttv.poltoraha.pivka.repository.ReadingRepository;
+import ttv.poltoraha.pivka.repository.*;
 import ttv.poltoraha.pivka.service.AuthorService;
 import ttv.poltoraha.pivka.service.RecommendationService;
 import util.MyUtility;
@@ -33,6 +30,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final BookRepository bookRepository;
     private final ReadingRepository readingRepository;
     private final AuthorRepository authorRepository;
+    private final QuoteGradeRepository quoteGradeRepository;
 
     /**
      * Чё делает метод и чё он должен делать:
@@ -137,11 +135,11 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .limit(2)
                 .toList();
 
-        val finishedListOfBooks = Stream.concat(booksByFirstTag.stream(),booksBySecondTag.stream())
+        val finishedListOfBooks = Stream.concat(booksByFirstTag.stream(), booksBySecondTag.stream())
                 .toList();
 
-        if(finishedListOfBooks.isEmpty()){
-        //todo потом тут сделаю всякие контроллерадвайсы и тд
+        if (finishedListOfBooks.isEmpty()) {
+            //todo потом тут сделаю всякие контроллерадвайсы и тд
             return null;
         }
 
@@ -169,9 +167,18 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .sorted(Comparator.comparingInt(reader -> reader.getReadings().size()))
                 .toList();
 
-        return topReader.stream()
+        val quotes = topReader.stream()
                 .flatMap(reader -> reader.getQuotes().stream())
                 .filter(quote -> Objects.equals(quote.getBook().getId(), book_id))
+                .toList();
+
+        quotes.forEach(quote -> {
+            Double averageRating = quoteGradeRepository.findAverageGradeByQuoteId(quote.getId());
+            quote.setRating(averageRating != null ? averageRating : 0.0);
+        });
+
+        return quotes.stream()
+                .sorted(Comparator.comparingDouble(Quote::getRating).reversed())
                 .limit(5)
                 .toList();
     }

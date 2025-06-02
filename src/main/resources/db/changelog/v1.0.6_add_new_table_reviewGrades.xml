@@ -1,0 +1,31 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-reviewGrades" author="iwbar">
+        <createTable tableName="reviewGrades">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="review_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_grade_review" references="review(id)"/>
+            </column>
+            <column name="reader_username" type="int">
+                <constraints nullable="false" foreignKeyName="fk_grade_reader" references="reader(username)"/>
+            </column>
+            <column name="value" type="int">
+                <constraints nullable="false" checkConstraint="value BETWEEN 1 AND 5"/>
+            </column>
+            <column name="created_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint
+                tableName="rating"
+                columnNames="review_id, reader_username"
+                constraintName="uq_rating_review_reader"/>
+    </changeSet>
+
+</databaseChangeLog>
