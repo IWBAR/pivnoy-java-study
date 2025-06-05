@@ -16,6 +16,7 @@
             <column name="user_type" type="varchar(31)"/>
             <!--            todo мб таску сделать прикрутить подтверждение по почте-->
             <column name="enabled" type="boolean"/>
+            <column name="password_change_required" type="boolean"/>
         </createTable>
 
         <createTable tableName="roles">

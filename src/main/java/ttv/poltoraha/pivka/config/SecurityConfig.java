@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ttv.poltoraha.pivka.filters.PasswordChangeFilter;
+
 
 /**
  * В текущем проекте система секьюрки представляет собой следующее:
@@ -26,8 +26,6 @@ import ttv.poltoraha.pivka.filters.PasswordChangeFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
-    private PasswordChangeFilter passwordChangeFilter;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -35,24 +33,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterAfter(passwordChangeFilter, UsernamePasswordAuthenticationFilter.class)
                 .userDetailsService(userDetailsService)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/change-password", "/login", "/h2-console/**").permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/home")
-                        .permitAll())
+                        .anyRequest().authenticated()
+                )
+                .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**"))
-                .headers(headers -> headers
-                        .frameOptions(frame -> frame.sameOrigin()))
-                        .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll());
+                // без этой штуки вам не даст авторизоваться в веб-окошке бд h2
+                .csrf()
+                .disable()
+                .cors()
+                .disable()
+                .headers(headers -> headers.frameOptions().sameOrigin());
 
 //        http.authorizeRequests().requestMatchers("/admin/**").hasRole("ADMIN")
 //                .requestMatchers("/**").permitAll().anyRequest().authenticated()
@@ -61,9 +53,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    // Дополнительно: если используете H2 Console
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

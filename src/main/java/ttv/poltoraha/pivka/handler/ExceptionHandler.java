@@ -1,4 +1,4 @@
-package ttv.poltoraha.pivka.exceptionHandler;
+package ttv.poltoraha.pivka.handler;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
