@@ -1,0 +1,41 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <changeSet id="create-review_grade-table" author="your_name">
+        <createTable tableName="review_grade">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="reader_username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="review_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="grade" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="review_grade"
+                baseColumnNames="reader_username"
+                constraintName="fk_review_grade_reader"
+                referencedTableName="reader"
+                referencedColumnNames="username"/>
+
+        <addForeignKeyConstraint
+                baseTableName="review_grade"
+                baseColumnNames="review_id"
+                constraintName="fk_review_grade_review"
+                referencedTableName="review"
+                referencedColumnNames="id"/>
+
+        <addUniqueConstraint
+                tableName="review_grade"
+                columnNames="reader_username, review_id"
+                constraintName="uq_review_grade_reader_review"/>
+    </changeSet>
+
+</databaseChangeLog>

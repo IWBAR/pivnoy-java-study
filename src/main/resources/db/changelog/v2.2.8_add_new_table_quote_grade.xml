@@ -1,0 +1,41 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+    <changeSet id="create-quote_grade-table" author="your_name">
+        <createTable tableName="quote_grade">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="reader_username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quote_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="grade" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="quote_grade"
+                baseColumnNames="reader_username"
+                constraintName="fk_quote_grade_reader"
+                referencedTableName="reader"
+                referencedColumnNames="username"/>
+
+        <addForeignKeyConstraint
+                baseTableName="quote_grade"
+                baseColumnNames="quote_id"
+                constraintName="fk_quote_grade_quote"
+                referencedTableName="quote"
+                referencedColumnNames="id"/>
+
+        <addUniqueConstraint
+                tableName="quote_grade"
+                columnNames="reader_username, quote_id"
+                constraintName="uq_quote_grade_reader_quote"/>
+    </changeSet>
+
+</databaseChangeLog>

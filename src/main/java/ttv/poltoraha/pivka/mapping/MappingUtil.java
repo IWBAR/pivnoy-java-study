@@ -15,13 +15,13 @@ public class MappingUtil {
                 .book(book)
                 .text(dto.getText())
                 .readerUsername(dto.getReaderUsername())
-                .rating(dto.getRating())
+                .rating(Double.valueOf(dto.getRating()))
                 .build();
     }
 
     public static Review updateFromRequestDto(Review review, ReviewRequestDto dto) {
         review.setText(dto.getText());
-        review.setRating(dto.getRating());
+        review.setRating(Double.valueOf(dto.getRating()));
 
         return review;
     }

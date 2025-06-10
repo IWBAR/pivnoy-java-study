@@ -19,7 +19,7 @@ public class BookServiceImpl implements BookService {
         Book book = MyUtility.findEntityById(bookRepository.findById(bookId), "book", bookId.toString());
         Double updatedAvgRaiting = book.getReviews()
                 .stream()
-                .mapToInt(Review::getRating)
+                .mapToDouble(Review::getRating)
                 .average()
                 .orElse(0.0);
 

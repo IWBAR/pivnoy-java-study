@@ -32,7 +32,7 @@ public class ComputeAvgRaitingJob {
                     author.getBooks().stream()
                             // флатмапа штука для того, чтобы внутри стрима вложенные массивы перевести в стрим, с которым можно работать дальше
                             .flatMap(book -> book.getReviews().stream())
-                            .mapToInt(Review::getRating)
+                            .mapToDouble(Review::getRating)
                             .average()
                             .orElse(5.0)
             );
