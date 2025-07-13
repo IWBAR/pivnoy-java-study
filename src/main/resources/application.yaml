@@ -3,6 +3,17 @@ logging:
     org.apache.kafka: WARN  # Уровень логирования для Kafka
 
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: email@gmail.com
+    password: password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   application:
     name: app
   datasource:

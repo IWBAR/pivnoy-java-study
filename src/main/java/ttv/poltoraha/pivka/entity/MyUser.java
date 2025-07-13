@@ -26,4 +26,7 @@ public class MyUser {
 
     @Column(name = "password_change_required")
     private boolean passwordChangeRequired;
+    private boolean enabled;
+    private String email;
+    private String token;
 }

@@ -7,7 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ttv.poltoraha.pivka.entity.MyUser;
 import ttv.poltoraha.pivka.repository.MyUserRepository;
+
+import java.util.UUID;
 
 // При помощи @RequiredArgsConstructor и lombok можно не заёбываться и удобно инжектить @Autowired через конструктор,
 // просто делает private final переменные
@@ -16,12 +19,19 @@ import ttv.poltoraha.pivka.repository.MyUserRepository;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final MyUserRepository myUserRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        val abcd = "sdasdsa";
         val user = myUserRepository.findById(username)
                 .orElseThrow(() -> new EntityNotFoundException("user not found with username = " + username));
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles());
     }
-}
+
+    public MyUser registerUser(MyUser user) {
+        user.setToken(UUID.randomUUID().toString());
+        user.setEnabled(false);
+        myUserRepository.save(user);
+        return user;
+    }
+}   

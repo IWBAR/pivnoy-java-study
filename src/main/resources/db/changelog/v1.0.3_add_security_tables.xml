@@ -17,6 +17,12 @@
             <!--            todo мб таску сделать прикрутить подтверждение по почте-->
             <column name="enabled" type="boolean"/>
             <column name="password_change_required" type="boolean"/>
+            <column name="email" type="varchar(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="token" type="varchar(255)">
+                <constraints unique="true"/>
+            </column>
         </createTable>
 
         <createTable tableName="roles">
